@@ -19,7 +19,7 @@ function MyOrders() {
   const fetchUserOrders = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/orders/user',
+        'https://thbb.onrender.com/api/orders/user',
         {
           headers: {
             'x-access-token': currentUser.token
@@ -217,7 +217,7 @@ export default MyOrders;
 //   const fetchUserOrders = async () => {
 //     try {
 //       const response = await axios.get(
-//         'http://localhost:5000/api/orders/user',
+//         'https://thbb.onrender.com/api/orders/user',
 //         {
 //           headers: {
 //             'x-access-token': currentUser.token

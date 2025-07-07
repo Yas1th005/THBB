@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/menu";
+const API_URL = "https://thbb.onrender.com/api/menu";
 
 class MenuService {
   // Get all menu items

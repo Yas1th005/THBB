@@ -178,7 +178,7 @@ function AdminDashboard() {
   const fetchAllOrders = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/orders/all',
+        'https://thbb.onrender.com/api/orders/all',
         {
           headers: {
             'x-access-token': currentUser.token
@@ -203,7 +203,7 @@ function AdminDashboard() {
   const fetchDeliveryPersons = async () => {
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/users/delivery',
+        'https://thbb.onrender.com/api/users/delivery',
         {
           headers: {
             'x-access-token': currentUser.token
@@ -228,7 +228,7 @@ function AdminDashboard() {
     try {
       // First assign the delivery person
       const assignResponse = await axios.post(
-        'http://localhost:5000/api/orders/assign-delivery',
+        'https://thbb.onrender.com/api/orders/assign-delivery',
         { 
           orderId, 
           deliveryGuyId: deliveryPersonId 
@@ -269,7 +269,7 @@ function AdminDashboard() {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `https://thbb.onrender.com/api/orders/${orderId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -623,7 +623,7 @@ function AdminDashboard() {
   const fetchAnalyticsData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/analytics/${timeRange}`,
+        `https://thbb.onrender.com/api/analytics/${timeRange}`,
         {
           headers: {
             'x-access-token': currentUser.token

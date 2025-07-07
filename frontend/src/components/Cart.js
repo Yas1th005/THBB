@@ -38,7 +38,7 @@ function Cart() {
     try {
       console.log('Fetching user address...');
       const response = await axios.get(
-        'http://localhost:5000/api/users/profile',
+        'https://thbb.onrender.com/api/users/profile',
         {
           headers: {
             'x-access-token': token
@@ -90,7 +90,7 @@ function Cart() {
       try {
         // Update the user's default address in the database
         await axios.put(
-          'http://localhost:5000/api/users/update-address',
+          'https://thbb.onrender.com/api/users/update-address',
           { address },
           {
             headers: {
@@ -137,7 +137,7 @@ function Cart() {
       };
 
       const response = await axios.post(
-        'http://localhost:5000/api/orders',
+        'https://thbb.onrender.com/api/orders',
         orderData,
         {
           headers: {
@@ -515,7 +515,7 @@ export default Cart;
 //     try {
 //       console.log('Fetching user address...');
 //       const response = await axios.get(
-//         'http://localhost:5000/api/users/profile',
+//         'https://thbb.onrender.com/api/users/profile',
 //         {
 //           headers: {
 //             'x-access-token': token
@@ -567,7 +567,7 @@ export default Cart;
 //       try {
 //         // Update the user's default address in the database
 //         await axios.put(
-//           'http://localhost:5000/api/users/update-address',
+//           'https://thbb.onrender.com/api/users/update-address',
 //           { address },
 //           {
 //             headers: {
@@ -614,7 +614,7 @@ export default Cart;
 //       };
 
 //       const response = await axios.post(
-//         'http://localhost:5000/api/orders',
+//         'https://thbb.onrender.com/api/orders',
 //         orderData,
 //         {
 //           headers: {

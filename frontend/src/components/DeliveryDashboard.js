@@ -60,7 +60,7 @@ function DeliveryDashboard() {
   const fetchAssignedOrders = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/orders/assigned/${currentUser.user.id}`,
+        `https://thbb.onrender.com/api/orders/assigned/${currentUser.user.id}`,
         {
           headers: {
             'x-access-token': currentUser.token
@@ -82,7 +82,7 @@ function DeliveryDashboard() {
       console.log(`Updating order ${orderId} to status: ${newStatus}`);
       
       const response = await axios.put(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `https://thbb.onrender.com/api/orders/${orderId}/status`,
         { status: newStatus },
         {
           headers: {
@@ -126,7 +126,7 @@ function DeliveryDashboard() {
       console.log('Verifying token:', verificationToken, 'for order ID:', order.id);
       
       const response = await axios.get(
-        `http://localhost:5000/api/orders/token/${verificationToken}`,
+        `https://thbb.onrender.com/api/orders/token/${verificationToken}`,
         {
           headers: {
             'x-access-token': currentUser.token
@@ -500,7 +500,7 @@ export default DeliveryDashboard;
 //   const fetchAssignedOrders = async () => {
 //     try {
 //       const response = await axios.get(
-//         `http://localhost:5000/api/orders/assigned/${currentUser.user.id}`,
+//         `https://thbb.onrender.com/api/orders/assigned/${currentUser.user.id}`,
 //         {
 //           headers: {
 //             'x-access-token': currentUser.token
@@ -522,7 +522,7 @@ export default DeliveryDashboard;
 //       console.log(`Updating order ${orderId} to status: ${newStatus}`);
       
 //       const response = await axios.put(
-//         `http://localhost:5000/api/orders/${orderId}/status`,
+//         `https://thbb.onrender.com/api/orders/${orderId}/status`,
 //         { status: newStatus },
 //         {
 //           headers: {
@@ -565,7 +565,7 @@ export default DeliveryDashboard;
       
 //       // Verify token against backend
 //       const response = await axios.get(
-//         `http://localhost:5000/api/orders/token/${verificationToken}`,
+//         `https://thbb.onrender.com/api/orders/token/${verificationToken}`,
 //         {
 //           headers: {
 //             'x-access-token': currentUser.token

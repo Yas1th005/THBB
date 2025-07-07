@@ -29,7 +29,7 @@ function Home() {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/menu');
+        const response = await axios.get('https://thbb.onrender.com/api/menu');
         const items = response.data;
         setMenuItems(items);
         
@@ -429,7 +429,7 @@ export default Home;
 //   useEffect(() => {
 //     const fetchMenu = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:5000/api/menu');
+//         const response = await axios.get('https://thbb.onrender.com/api/menu');
 //         setMenuItems(response.data);
 //         setLoading(false);
 //       } catch (err) {
