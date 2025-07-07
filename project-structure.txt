@@ -1,0 +1,13 @@
+project-root/
+├── frontend/           # React app (already exists)
+├── backend/            # Node.js + Express app
+│   ├── config/         # Database and server configuration
+│   ├── controllers/    # Route controllers
+│   ├── models/         # Database models
+│   ├── routes/         # API routes
+│   ├── socket/         # Socket.IO handlers
+│   ├── utils/          # Utility functions
+│   ├── .env            # Environment variables
+│   ├── server.js       # Main server file
+│   └── package.json    # Already exists
+└── docker-compose.yml  # Docker setup for MySQL and phpMyAdmin
