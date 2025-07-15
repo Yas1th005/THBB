@@ -135,7 +135,6 @@ exports.updateItem = async (req, res) => {
 // Toggle menu item availability
 exports.toggleAvailability = async (req, res) => {
   try {
-    console.log(req)
     const id = req.params.id;
     const { is_available } = req.body;
     

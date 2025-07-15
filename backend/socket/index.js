@@ -9,16 +9,13 @@ module.exports = (io) => {
     // Add order-related socket events
     socket.on('join-admin-room', () => {
       socket.join('admin-room');
-      console.log('Admin joined admin room');
     });
-    
+
     socket.on('join-delivery-room', (deliveryGuyId) => {
       socket.join(`delivery-${deliveryGuyId}`);
-      console.log(`Delivery person ${deliveryGuyId} joined their room`);
     });
-    
+
     socket.on('order-status-update', (data) => {
-      console.log('Order status update received:', data);
       
       // Broadcast to all clients
       io.emit('order-status-updated', data);

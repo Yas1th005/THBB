@@ -23,9 +23,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Log all incoming requests
+// Middleware for request processing
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
   next();
 });
 

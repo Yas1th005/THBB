@@ -4,18 +4,15 @@ const db = require('../models');
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log('Fetching profile for user ID:', userId);
-    
+
     const user = await db.users.findByPk(userId, {
       attributes: ['id', 'name', 'email', 'address', 'role']
     });
-    
+
     if (!user) {
-      console.log('User not found with ID:', userId);
       return res.status(404).send({ message: "User not found" });
     }
-    
-    console.log('User found:', user.name, 'with address:', user.address);
+
     res.status(200).send(user);
   } catch (err) {
     console.error("Error retrieving user profile:", err);
@@ -61,16 +58,35 @@ exports.getDeliveryPersonnel = async (req, res) => {
       where: { role: 'delivery' },
       attributes: ['id', 'name', 'email', 'address'] // Only return necessary fields
     });
-    
+
     if (!deliveryPersons || deliveryPersons.length === 0) {
       return res.status(200).json([]);
     }
-    
+
     res.status(200).json(deliveryPersons);
   } catch (err) {
     console.error("Error fetching delivery personnel:", err);
-    res.status(500).json({ 
-      message: err.message || "Some error occurred while retrieving delivery personnel." 
+    res.status(500).json({
+      message: err.message || "Some error occurred while retrieving delivery personnel."
+    });
+  }
+};
+
+// Get all users (admin only)
+exports.getAllUsers = async (req, res) => {
+  try {
+    // Find all users with role 'customer'
+    const users = await db.users.findAll({
+      where: { role: 'customer' },
+      attributes: ['id', 'name', 'email', 'address', 'created_at'],
+      order: [['created_at', 'DESC']]
+    });
+
+    res.status(200).json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({
+      message: err.message || "Some error occurred while retrieving users."
     });
   }
 };

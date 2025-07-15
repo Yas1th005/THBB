@@ -34,7 +34,16 @@ function SignIn() {
           break;
       }
     } catch (error) {
-      const resMessage = error.response?.data?.message || error.message || "An error occurred";
+      let resMessage = "An error occurred";
+
+      if (error.response?.data?.message) {
+        resMessage = error.response.data.message;
+      } else if (error.response?.data) {
+        resMessage = typeof error.response.data === 'string' ? error.response.data : "Invalid credentials";
+      } else if (error.message) {
+        resMessage = error.message;
+      }
+
       setMessage(resMessage);
       setLoading(false);
     }

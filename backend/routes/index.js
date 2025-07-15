@@ -12,6 +12,12 @@ router.use('/auth', require('./auth.routes'));
 // Menu routes
 router.use('/menu', require('./menu.routes'));
 
+// User routes
+router.use('/users', require('./user.routes'));
+
+// Order routes
+router.use('/orders', require('./order.routes'));
+
 module.exports = router;
 
 

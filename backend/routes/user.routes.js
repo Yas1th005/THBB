@@ -12,6 +12,9 @@ router.put('/update-address', verifyToken, userController.updateUserAddress);
 // Get all delivery personnel (admin only)
 router.get('/delivery', [verifyToken, isAdmin], userController.getDeliveryPersonnel);
 
+// Get all users (admin only)
+router.get('/all', [verifyToken, isAdmin], userController.getAllUsers);
+
 module.exports = router;
 
 

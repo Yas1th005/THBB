@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, LogOut, Home as HomeIcon } from 'lucide-react';
+import { ShoppingCart, User, LogOut, Home as HomeIcon, Package } from 'lucide-react';
 
 // Components
 import SignUp from './components/SignUp';
@@ -12,6 +12,7 @@ import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Cart from './components/Cart';
 import MyOrders from './components/MyOrders';
+import OrderDetails from './components/OrderDetails';
 
 // Services
 import AuthService from './services/auth.service';
@@ -99,9 +100,9 @@ function App() {
               <div className="flex items-center space-x-4">
                 <Link to="/" className="flex items-center space-x-2 text-white no-underline hover:text-orange-400 transition-colors">
                   <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">F</span>
+                    <span className="text-white font-bold text-sm">TB</span>
                   </div>
-                  <span className="font-bold text-lg hidden sm:block">FoodieExpress</span>
+                  <span className="font-bold text-lg hidden sm:block">THBB</span>
                 </Link>
               </div>
               
@@ -137,11 +138,13 @@ function App() {
                           <span className="hidden sm:inline text-sm">Cart</span>
                         </Link>
                         
-                        <Link 
-                          to="/my-orders" 
-                          className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-colors text-sm hidden sm:block"
+                        <Link
+                          to="/my-orders"
+                          className="p-2 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-colors flex items-center space-x-1"
+                          title="My Orders"
                         >
-                          My Orders
+                          <Package className="w-5 h-5" />
+                          <span className="hidden sm:inline text-sm">My Orders</span>
                         </Link>
                       </>
                     )}
@@ -235,13 +238,21 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            <Route 
-              path="/my-orders" 
+            <Route
+              path="/my-orders"
               element={
                 <ProtectedRoute requiredRole="customer">
                   <MyOrders />
                 </ProtectedRoute>
-              } 
+              }
+            />
+            <Route
+              path="/orders/:token"
+              element={
+                <ProtectedRoute requiredRole="customer">
+                  <OrderDetails />
+                </ProtectedRoute>
+              }
             />
           </Routes>
         </main>

@@ -24,6 +24,9 @@ router.put('/:orderId/status', verifyToken, orderController.updateOrderStatus);
 // Get all orders (admin only)
 router.get('/all', [verifyToken, isAdmin], orderController.getAllOrders);
 
+// Get orders by user ID (admin only)
+router.get('/user/:userId', [verifyToken, isAdmin], orderController.getOrdersByUserId);
+
 module.exports = router;
 
 

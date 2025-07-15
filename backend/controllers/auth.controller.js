@@ -14,19 +14,15 @@ const otpStore = {};
 // Signup controller
 exports.signup = async (req, res) => {
   try {
-    console.log('Signup request received:', req.body);
-    
     // Validate request
     const { name, email, password, address, role } = req.body;
     if (!name || !email || !password || !address) {
-      console.log('Validation failed: Missing required fields');
       return res.status(400).json({ message: "All fields are required!" });
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      console.log('User already exists with email:', email);
       return res.status(400).json({ message: "Email already in use!" });
     }
 
@@ -42,8 +38,6 @@ exports.signup = async (req, res) => {
       address,
       role: role || 'customer' // Default to customer if not specified
     });
-
-    console.log('User created successfully:', user.id);
 
     // Generate JWT token
     const token = jwt.sign(

@@ -15,8 +15,17 @@ exports.createOrder = async (req, res) => {
       return res.status(400).send({ message: "Order must contain at least one item" });
     }
     
-    // Generate unique order token
-    const token = crypto.randomBytes(6).toString('hex').toUpperCase();
+    // Generate unique 5-digit alphanumeric order token
+    const generateOrderToken = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let token = '';
+      for (let i = 0; i < 5; i++) {
+        token += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return token;
+    };
+
+    const token = generateOrderToken();
     
     // Create order in database
     const order = await Order.create({
@@ -53,7 +62,6 @@ exports.getUserOrders = async (req, res) => {
   try {
     // Fix: Get userId from req.user.id instead of req.userId
     const userId = req.user.id;
-    // console.log('Fetching orders for user ID:', userId);
     
     const orders = await Order.findAll({
       where: { user_id: userId },
@@ -212,28 +220,23 @@ exports.updateOrderStatus = async (req, res) => {
   try {
     const orderId = req.params.orderId;
     const { status } = req.body;
-    console.log(`Updating order ${orderId} to status: ${status}`);
-    
+
     // Validate status
     const validStatuses = ['pending', 'out_for_delivery', 'delivered', 'cancelled'];
     if (!validStatuses.includes(status)) {
       return res.status(400).send({ message: "Invalid status value" });
     }
-    
+
     // Find the order
     const order = await Order.findByPk(orderId);
-    
+
     if (!order) {
       return res.status(404).send({ message: "Order not found" });
     }
-    
-    console.log("Current order status:", order.status);
-    
+
     // Update the order status
     order.status = status;
     await order.save();
-    
-    console.log("Order status updated to:", status);
     
     // Get the updated order with all necessary information
     const updatedOrder = await Order.findByPk(orderId, {
@@ -311,6 +314,54 @@ exports.getAllOrders = async (req, res) => {
     res.status(200).send(formattedOrders);
   } catch (err) {
     console.error("Error retrieving all orders:", err);
+    res.status(500).send({ message: err.message });
+  }
+};
+
+// Get orders by user ID (admin only)
+exports.getOrdersByUserId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const orders = await Order.findAll({
+      where: { user_id: userId },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name', 'email']
+        },
+        {
+          model: User,
+          as: 'delivery_person',
+          attributes: ['id', 'name', 'email'],
+          required: false
+        },
+        {
+          model: OrderItem,
+          include: [
+            {
+              model: MenuItem
+            }
+          ]
+        }
+      ],
+      order: [['created_at', 'DESC']]
+    });
+
+    // Format the response
+    const formattedOrders = orders.map(order => {
+      const plainOrder = order.get({ plain: true });
+      return {
+        ...plainOrder,
+        user_name: plainOrder.user ? plainOrder.user.name : null,
+        delivery_person: plainOrder.delivery_person || null
+      };
+    });
+
+    res.status(200).send(formattedOrders);
+  } catch (err) {
+    console.error("Error retrieving user orders:", err);
     res.status(500).send({ message: err.message });
   }
 };

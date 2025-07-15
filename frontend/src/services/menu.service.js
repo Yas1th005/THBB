@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://thbb.onrender.com/api/menu";
+const API_URL = "http://localhost:5000/api/menu";
 
 class MenuService {
   // Get all menu items
@@ -17,8 +17,8 @@ class MenuService {
   createMenuItem(menuData, token) {
     return axios.post(API_URL, menuData, {
       headers: {
-        "x-access-token": token
-      }
+        "x-access-token": token,
+      },
     });
   }
 
@@ -26,19 +26,20 @@ class MenuService {
   updateMenuItem(id, menuData, token) {
     return axios.put(`${API_URL}/${id}`, menuData, {
       headers: {
-        "x-access-token": token
-      }
+        "x-access-token": token,
+      },
     });
   }
 
   // Toggle menu item availability
   toggleAvailability(id, isAvailable, token) {
-    return axios.put(`${API_URL}/${id}/availability`, 
+    return axios.put(
+      `${API_URL}/${id}/availability`,
       { is_available: isAvailable },
       {
         headers: {
-          "x-access-token": token
-        }
+          "x-access-token": token,
+        },
       }
     );
   }
@@ -47,13 +48,10 @@ class MenuService {
   deleteMenuItem(id, token) {
     return axios.delete(`${API_URL}/${id}`, {
       headers: {
-        "x-access-token": token
-      }
+        "x-access-token": token,
+      },
     });
   }
 }
 
 export default new MenuService();
-
-
-
