@@ -359,7 +359,7 @@ function DeliveryDashboard() {
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-orange-500">
-                        ${order.total_price}
+                        ₹{order.total_price}
                       </p>
                     </div>
                   </div>

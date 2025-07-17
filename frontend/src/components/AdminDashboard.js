@@ -892,7 +892,7 @@ function AdminDashboard() {
                     ),
                     datasets: [
                       {
-                        label: "Revenue ($)",
+                        label: "Revenue (₹)",
                         data: analyticsData.revenueTrends.map(
                           (item) => item.total
                         ),
@@ -931,7 +931,7 @@ function AdminDashboard() {
                           color: "#9CA3AF",
                           beginAtZero: true,
                           callback: function (value) {
-                            return "$" + value;
+                            return "₹" + value;
                           },
                         },
                         grid: {
@@ -1177,7 +1177,7 @@ function AdminDashboard() {
               </div>
 
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Price ($)</label>
+                <label className="block text-gray-700 mb-2">Price (₹)</label>
                 <input
                   type="number"
                   name="price"

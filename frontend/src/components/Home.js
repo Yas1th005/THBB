@@ -352,6 +352,7 @@ function Home() {
 
 function MenuItem({ item, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
+  const [isAdded, setIsAdded] = useState(false);
 
   return (
     <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02]">
@@ -423,12 +424,24 @@ function MenuItem({ item, onAddToCart }) {
 
           {/* Add to Cart Button */}
           <button
-            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm"
-            onClick={() => onAddToCart(item, quantity)}
+            className={`flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${
+              isAdded
+                ? "bg-green-500 hover:bg-green-600 text-white"
+                : "bg-orange-500 hover:bg-orange-600 text-white"
+            }`}
+            onClick={() => {
+              onAddToCart(item, quantity);
+              setIsAdded(true);
+              // setTimeout(() => setIsAdded(false), 2000);
+            }}
           >
             <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden xs:inline sm:inline">Add to Cart</span>
-            <span className="xs:hidden sm:hidden">Add</span>
+            <span className="hidden xs:inline sm:inline">
+              {isAdded ? "Added" : "Add to Cart"}
+            </span>
+            <span className="xs:hidden sm:hidden">
+              {isAdded ? "Added" : "Add"}
+            </span>
           </button>
         </div>
       </div>
