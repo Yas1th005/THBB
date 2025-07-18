@@ -357,8 +357,9 @@ function MenuItem({ item, onAddToCart }) {
   return (
     <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02]">
       <div className="relative">
+        {/* {console.log(item)} */}
         <img
-          src={item.imageUrl}
+          src={item.image_url}
           alt={item.name}
           className="w-full h-40 sm:h-48 lg:h-52 object-cover"
           onError={(e) => {
