@@ -99,8 +99,8 @@ function App() {
               {/* Logo */}
               <div className="flex items-center space-x-4">
                 <Link to="/" className="flex items-center space-x-2 text-white no-underline hover:text-orange-400 transition-colors">
-                  <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">TB</span>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                    <img src="./thbb_logo.png" className="text-white font-bold text-sm"></img>
                   </div>
                   <span className="font-bold text-lg hidden sm:block">THBB</span>
                 </Link>

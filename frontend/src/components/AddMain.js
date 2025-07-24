@@ -21,7 +21,7 @@ function AddMain() {
     setLoading(true);
     
     try {
-      console.log('Signing up with:', { name, email, password, address, role });
+      // console.log('Signing up with:', { name, email, password, address, role });
       await AuthService.signup(name, email, password, address, role);
       
       // Auto sign in after successful signup

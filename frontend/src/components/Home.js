@@ -30,13 +30,14 @@ function Home() {
   // Categories could be dynamic based on menu items
   const categories = [
     "All",
-    "Pizza",
-    "Burgers",
-    "Salads",
-    "Pasta",
-    "Mexican",
-    "Desserts",
+    "Non Veg",
+    "veg",
+    "starters",
+    "veg starter",
+    "noodles",
+    "Combos",
   ];
+
 
   // Today's specials (can be filtered from menuItems based on a special flag)
   const [todaysSpecials, setTodaysSpecials] = useState([]);
@@ -216,7 +217,7 @@ function Home() {
                         <div className="flex flex-col sm:flex-row">
                           <div className="sm:w-1/2">
                             <img
-                              src={item.imageUrl}
+                              src={item.image_url}
                               alt={item.name}
                               className="w-full h-48 sm:h-64 object-cover"
                               onError={(e) => {
@@ -318,7 +319,7 @@ function Home() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-3 py-2 sm:px-4 rounded-full whitespace-nowrap text-xs sm:text-sm font-medium transition-colors ${
+              className={`px-3 py-2 sm:px-4 rounded-full whitespace-nowrap text-xs sm:text-sm font-medium transition-colors capitalize ${
                 selectedCategory === category
                   ? "bg-orange-500 text-white"
                   : "bg-gray-800 text-gray-300 hover:bg-gray-700"

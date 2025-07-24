@@ -17,9 +17,9 @@ exports.createOrder = async (req, res) => {
     
     // Generate unique 5-digit alphanumeric order token
     const generateOrderToken = () => {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const chars = '0123456789';
       let token = '';
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 3; i++) {
         token += chars.charAt(Math.floor(Math.random() * chars.length));
       }
       return token;

@@ -155,7 +155,7 @@ function Cart() {
           },
         }
       );
-
+ 
       // Store the order details before clearing cart
       setOrderToken(response.data.token);
       setOrderTotal(total);
@@ -400,9 +400,10 @@ function Cart() {
                         {/* Item Image & Details */}
                         <div className="flex items-center space-x-4 lg:space-x-6 flex-1 min-w-0">
                           {/* Item Image */}
-                          <div className="flex-shrink-0">
+                          {/* {console.log(item)} */}
+                          {/* <div className="flex-shrink-0">
                             <img
-                              src={item.imageUrl}
+                              src={item.image_url}
                               alt={item.name}
                               className="w-16 sm:w-20 lg:w-24 xl:w-28 h-16 sm:h-20 lg:h-24 xl:h-28 object-cover rounded-xl shadow-md"
                               onError={(e) => {
@@ -410,7 +411,7 @@ function Cart() {
                                   "https://via.placeholder.com/112x112/374151/9CA3AF?text=Food";
                               }}
                             />
-                          </div>
+                          </div> */}
 
                           {/* Item Details */}
                           <div className="flex-1 min-w-0">
