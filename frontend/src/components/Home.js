@@ -334,7 +334,7 @@ function Home() {
       {/* Menu Items */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Our Menu</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {filteredItems.map((item) => (
             <MenuItem key={item.id} item={item} onAddToCart={handleAddToCart} />
           ))}
@@ -362,7 +362,7 @@ function MenuItem({ item, onAddToCart }) {
         <img
           src={item.image_url}
           alt={item.name}
-          className="w-full h-40 sm:h-48 lg:h-52 object-cover"
+          className="w-full h-32 sm:h-48 lg:h-52 object-cover"
           onError={(e) => {
             e.target.src =
               "https://via.placeholder.com/400x300/374151/9CA3AF?text=Food+Image";
@@ -383,41 +383,41 @@ function MenuItem({ item, onAddToCart }) {
         )}
       </div>
 
-      <div className="p-3 sm:p-4 lg:p-5">
+      <div className="p-2 sm:p-4 lg:p-5">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-white line-clamp-1 flex-1">
+          <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-white line-clamp-1 flex-1">
             {item.name}
           </h3>
-          <span className="text-orange-500 font-bold text-base sm:text-lg ml-2">
+          <span className="text-orange-500 font-bold text-sm sm:text-lg ml-1">
             ₹{item.price}
           </span>
         </div>
 
-        <p className="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
+        {/* <p className="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
           {item.description}
-        </p>
+        </p> */}
 
         {item.prepTime && (
-          <div className="flex items-center text-gray-500 text-xs mb-3 sm:mb-4">
+          <div className="flex items-center text-gray-500 text-xs mb-2 sm:mb-4">
             <Clock className="w-3 h-3 mr-1" />
             <span>{item.prepTime}</span>
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
+        <div className="flex items-center justify-between gap-1 sm:gap-3">
           {/* Quantity Selector */}
           <div className="flex items-center bg-gray-700 rounded-lg">
             <button
-              className="p-1.5 sm:p-2 hover:bg-gray-600 rounded-l-lg transition-colors"
+              className="p-1 sm:p-2 hover:bg-gray-600 rounded-l-lg transition-colors"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
             >
               <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
             </button>
-            <span className="px-2 sm:px-3 py-1.5 sm:py-2 font-medium min-w-[1.5rem] sm:min-w-[2rem] text-center text-sm">
+            <span className="px-1.5 sm:px-3 py-1 sm:py-2 font-medium min-w-[1.2rem] sm:min-w-[2rem] text-center text-xs sm:text-sm">
               {quantity}
             </span>
             <button
-              className="p-1.5 sm:p-2 hover:bg-gray-600 rounded-r-lg transition-colors"
+              className="p-1 sm:p-2 hover:bg-gray-600 rounded-r-lg transition-colors"
               onClick={() => setQuantity(quantity + 1)}
             >
               <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -426,7 +426,7 @@ function MenuItem({ item, onAddToCart }) {
 
           {/* Add to Cart Button */}
           <button
-            className={`flex-1 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${
+            className={`flex-1 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${
               isAdded
                 ? "bg-green-500 hover:bg-green-600 text-white"
                 : "bg-orange-500 hover:bg-orange-600 text-white"
@@ -438,11 +438,11 @@ function MenuItem({ item, onAddToCart }) {
             }}
           >
             <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="hidden xs:inline sm:inline">
+            <span className="hidden sm:inline">
               {isAdded ? "Added" : "Add to Cart"}
             </span>
-            <span className="xs:hidden sm:hidden">
-              {isAdded ? "Added" : "Add"}
+            <span className="sm:hidden">
+              {isAdded ? "✓" : "Add"}
             </span>
           </button>
         </div>

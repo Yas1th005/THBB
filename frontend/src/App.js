@@ -11,6 +11,7 @@ import DeliveryDashboard from './components/DeliveryDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Cart from './components/Cart';
+import AdminCart from './components/AdminCart';
 import MyOrders from './components/MyOrders';
 import OrderDetails from './components/OrderDetails';
 
@@ -222,21 +223,29 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            <Route 
-              path="/admin" 
+            <Route
+              path="/admin"
               element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminDashboard />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/cart" 
+            <Route
+              path="/admin-cart"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminCart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
               element={
                 <ProtectedRoute requiredRole="customer">
                   <Cart />
                 </ProtectedRoute>
-              } 
+              }
             />
             <Route
               path="/my-orders"

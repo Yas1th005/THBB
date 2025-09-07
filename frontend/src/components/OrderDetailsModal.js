@@ -21,175 +21,185 @@ function OrderDetailsModal({ isOpen, onClose, order }) {
             body {
               font-family: 'Courier New', monospace;
               margin: 0;
-              padding: 20px;
+              padding: 15px;
               background: white;
               color: #000;
-              font-size: 14px;
-              line-height: 1.4;
+              font-size: 11px;
+              line-height: 1.3;
             }
 
             .bill-container {
-              max-width: 400px;
+              max-width: 350px;
               margin: 0 auto;
               border: 2px solid #000;
-              padding: 20px;
+              padding: 15px;
               background: white;
             }
 
             .header {
               text-align: center;
               border-bottom: 2px dashed #000;
-              padding-bottom: 15px;
-              margin-bottom: 15px;
+              padding-bottom: 12px;
+              margin-bottom: 12px;
             }
 
             .restaurant-name {
-              font-size: 24px;
+              font-size: 18px;
               font-weight: bold;
-              margin-bottom: 5px;
-              letter-spacing: 2px;
+              margin-bottom: 3px;
+              letter-spacing: 1px;
             }
 
             .restaurant-tagline {
-              font-size: 12px;
-              margin-bottom: 10px;
+              font-size: 10px;
+              margin-bottom: 8px;
               font-style: italic;
             }
 
             .bill-title {
-              font-size: 18px;
+              font-size: 14px;
               font-weight: bold;
-              margin-top: 10px;
+              margin-top: 8px;
               text-decoration: underline;
             }
 
             .order-details {
-              margin-bottom: 15px;
+              margin-bottom: 12px;
               border-bottom: 1px dashed #000;
-              padding-bottom: 15px;
+              padding-bottom: 12px;
             }
 
             .detail-row {
               display: flex;
               justify-content: space-between;
-              margin-bottom: 5px;
+              margin-bottom: 3px;
+              font-size: 10px;
             }
 
             .detail-label {
               font-weight: bold;
-              width: 120px;
+              width: 100px;
             }
 
             .items-section {
-              margin-bottom: 15px;
+              margin-bottom: 12px;
             }
 
             .items-header {
               font-weight: bold;
               text-align: center;
-              margin-bottom: 10px;
+              margin-bottom: 8px;
               text-decoration: underline;
+              font-size: 11px;
             }
 
             .items-table {
               width: 100%;
               border-collapse: collapse;
-              margin-bottom: 15px;
+              margin-bottom: 12px;
+              table-layout: fixed;
             }
 
             .items-table th {
               border-bottom: 2px solid #000;
-              padding: 8px 4px;
+              padding: 6px 2px;
               text-align: left;
               font-weight: bold;
-              font-size: 12px;
+              font-size: 8px;
+              word-wrap: break-word;
             }
 
             .items-table td {
               border-bottom: 1px dotted #000;
-              padding: 6px 4px;
-              font-size: 12px;
+              padding: 4px 2px;
+              font-size: 8px;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
             }
 
             .item-name {
-              width: 50%;
+              width: 45%;
+              word-break: break-word;
             }
 
             .item-qty {
-              width: 15%;
+              width: 12%;
               text-align: center;
             }
 
             .item-price {
-              width: 17.5%;
+              width: 21.5%;
               text-align: right;
             }
 
             .item-total {
-              width: 17.5%;
+              width: 21.5%;
               text-align: right;
             }
 
             .totals-section {
               border-top: 2px solid #000;
-              padding-top: 10px;
-              margin-bottom: 15px;
+              padding-top: 8px;
+              margin-bottom: 12px;
             }
 
             .total-row {
               display: flex;
               justify-content: space-between;
-              margin-bottom: 5px;
+              margin-bottom: 3px;
+              font-size: 10px;
             }
 
             .grand-total {
               border-top: 2px solid #000;
-              padding-top: 8px;
-              margin-top: 8px;
+              padding-top: 6px;
+              margin-top: 6px;
               font-weight: bold;
-              font-size: 16px;
+              font-size: 12px;
             }
 
             .qr-section {
               text-align: center;
               border-top: 2px dashed #000;
-              padding-top: 15px;
-              margin-top: 15px;
+              padding-top: 12px;
+              margin-top: 12px;
             }
 
             .qr-title {
               font-weight: bold;
-              margin-bottom: 10px;
+              margin-bottom: 8px;
+              font-size: 10px;
             }
 
             .qr-code {
-              margin: 10px 0;
+              margin: 8px 0;
             }
 
             .token-display {
               font-family: 'Courier New', monospace;
               font-weight: bold;
-              font-size: 16px;
-              letter-spacing: 2px;
-              margin-top: 10px;
+              font-size: 12px;
+              letter-spacing: 1px;
+              margin-top: 8px;
             }
 
             .footer {
               text-align: center;
-              margin-top: 20px;
+              margin-top: 15px;
               border-top: 2px dashed #000;
-              padding-top: 15px;
-              font-size: 12px;
+              padding-top: 12px;
+              font-size: 9px;
             }
 
             .thank-you {
               font-weight: bold;
-              margin-bottom: 5px;
+              margin-bottom: 4px;
+              font-size: 10px;
             }
 
             .contact-info {
-              margin-top: 10px;
-              font-size: 11px;
+              margin-top: 8px;
+              font-size: 8px;
             }
           </style>
         </head>

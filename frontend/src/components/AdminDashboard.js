@@ -6,6 +6,7 @@ import axios from "axios";
 import socket from "../socket";
 import { Bar, Line, Pie } from "react-chartjs-2";
 import OrderDetailsModal from "./OrderDetailsModal";
+import { ShoppingCart, Plus, Minus, Star, Clock } from "lucide-react";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -35,6 +36,15 @@ function AdminDashboard() {
     popularItems: [],
   });
   const [timeRange, setTimeRange] = useState("week");
+
+  // Search functionality for menu items
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Order food functionality for admin
+  const [adminCartItems, setAdminCartItems] = useState([]);
+  const [adminCartCount, setAdminCartCount] = useState(0);
+  const [orderSearchQuery, setOrderSearchQuery] = useState("");
+  const [selectedOrderCategory, setSelectedOrderCategory] = useState("All");
 
   // Add logout handler
   const handleLogout = () => {
@@ -69,6 +79,18 @@ function AdminDashboard() {
       if (activeTab === "analytics") {
         fetchAnalyticsData();
       }
+    }
+
+    // Initialize admin cart
+    updateAdminCartCount();
+    const cart = JSON.parse(localStorage.getItem("adminCart") || "[]");
+    setAdminCartItems(cart);
+
+    // Restore tab state if returning from cart
+    const savedTab = sessionStorage.getItem('adminActiveTab');
+    if (savedTab && savedTab !== activeTab) {
+      setActiveTab(savedTab);
+      sessionStorage.removeItem('adminActiveTab');
     }
 
     return () => {
@@ -173,6 +195,67 @@ function AdminDashboard() {
     setCurrentMenuItem(item);
     setShowMenuModal(true);
   };
+
+  // Filter menu items based on search query
+  const filteredMenuItems = menuItems.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Admin cart management functions
+  const updateAdminCartCount = () => {
+    const cart = JSON.parse(localStorage.getItem("adminCart") || "[]");
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    setAdminCartCount(totalItems);
+  };
+
+  const handleAdminAddToCart = (item, quantity) => {
+    const cartItem = {
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: quantity,
+      imageUrl: item.imageUrl,
+    };
+
+    const existingCart = JSON.parse(localStorage.getItem("adminCart") || "[]");
+    const existingItemIndex = existingCart.findIndex((i) => i.id === item.id);
+
+    if (existingItemIndex >= 0) {
+      existingCart[existingItemIndex].quantity += quantity;
+    } else {
+      existingCart.push(cartItem);
+    }
+
+    localStorage.setItem("adminCart", JSON.stringify(existingCart));
+    setAdminCartItems(existingCart);
+    updateAdminCartCount();
+
+    // Show success feedback
+    const notification = document.createElement("div");
+    notification.className =
+      "fixed top-20 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-transform duration-300";
+    notification.textContent = `Added ${quantity} ${item.name} to admin cart`;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.transform = "translateX(100%)";
+      setTimeout(() => document.body.removeChild(notification), 300);
+    }, 2000);
+  };
+
+  // Filter menu items for ordering
+  const categories = ["All", "Non Veg", "veg", "starters", "veg starter", "noodles", "Combos"];
+
+  const filteredOrderItems = menuItems.filter((item) => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(orderSearchQuery.toLowerCase());
+    const matchesCategory =
+      selectedOrderCategory === "All" || item.category === selectedOrderCategory;
+    return matchesSearch && matchesCategory && item.is_available;
+  });
 
   // Fetch all orders - update to filter only pending and out_for_delivery
   const fetchAllOrders = async () => {
@@ -333,15 +416,72 @@ function AdminDashboard() {
             </button>
           </div>
 
-          {menuItems.length === 0 ? (
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search menu items by name, category, or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-10 pr-3 py-3 border border-gray-600 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  <svg
+                    className="h-5 w-5 text-gray-400 hover:text-white transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              )}
+            </div>
+            {searchQuery && (
+              <p className="mt-2 text-sm text-gray-400">
+                Showing {filteredMenuItems.length} of {menuItems.length} items
+              </p>
+            )}
+          </div>
+
+          {filteredMenuItems.length === 0 ? (
             <div className="bg-gray-800 rounded-xl shadow-lg p-6 text-center">
-              <p className="text-gray-400">No menu items found.</p>
+              <p className="text-gray-400">
+                {searchQuery ? `No menu items found matching "${searchQuery}".` : "No menu items found."}
+              </p>
             </div>
           ) : (
             <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               {/* Mobile Card View */}
               <div className="block sm:hidden">
-                {menuItems.map((item) => (
+                {filteredMenuItems.map((item) => (
                   <div
                     key={item.id}
                     className="border-b border-gray-700 last:border-b-0 p-4"
@@ -420,7 +560,7 @@ function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-700">
-                    {menuItems.map((item) => (
+                    {filteredMenuItems.map((item) => (
                       <tr
                         key={item.id}
                         className="hover:bg-gray-750 transition-colors"
@@ -765,6 +905,108 @@ function AdminDashboard() {
     setShowOrderDetailsModal(true);
   };
 
+  // Render order food tab for admin
+  const renderOrderFood = () => {
+    return (
+      <div className="bg-gray-900 text-white min-h-screen p-4 sm:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white">
+              Order Food for Restaurant
+            </h3>
+            <div className="flex items-center space-x-4">
+              <div className="text-sm text-gray-400">
+                Cart: {adminCartCount} items
+              </div>
+              {adminCartCount > 0 && (
+                <button
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  onClick={() => {
+                    // Save current tab state before navigating
+                    sessionStorage.setItem('adminActiveTab', activeTab);
+                    navigate("/admin-cart");
+                  }}
+                >
+                  View Cart
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Search and Filter Section */}
+          <div className="mb-6 space-y-4">
+            {/* Search Bar */}
+            <div className="relative max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search menu items..."
+                value={orderSearchQuery}
+                onChange={(e) => setOrderSearchQuery(e.target.value)}
+                className="block w-full pl-10 pr-3 py-3 border border-gray-600 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    selectedOrderCategory === category
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                  onClick={() => setSelectedOrderCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {orderSearchQuery && (
+              <p className="text-sm text-gray-400">
+                Showing {filteredOrderItems.length} of {menuItems.filter(item => item.is_available).length} available items
+              </p>
+            )}
+          </div>
+
+          {/* Menu Items Grid */}
+          {filteredOrderItems.length === 0 ? (
+            <div className="bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+              <p className="text-gray-400">
+                {orderSearchQuery || selectedOrderCategory !== "All"
+                  ? "No items found matching your criteria."
+                  : "No available menu items found."}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+              {filteredOrderItems.map((item) => (
+                <AdminMenuItem key={item.id} item={item} onAddToCart={handleAdminAddToCart} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // Render analytics tab
   const renderAnalytics = () => {
     return (
@@ -1103,9 +1345,9 @@ function AdminDashboard() {
       </p>
 
       {/* Tab navigation */}
-      <div className="flex border-b mb-6">
+      <div className="flex border-b mb-6 overflow-x-auto">
         <button
-          className={`py-2 px-4 font-medium ${
+          className={`py-2 px-4 font-medium whitespace-nowrap ${
             activeTab === "orders"
               ? "border-b-2 border-blue-500 text-blue-500"
               : "text-gray-500"
@@ -1115,7 +1357,7 @@ function AdminDashboard() {
           Orders
         </button>
         <button
-          className={`py-2 px-4 font-medium ${
+          className={`py-2 px-4 font-medium whitespace-nowrap ${
             activeTab === "menu"
               ? "border-b-2 border-blue-500 text-blue-500"
               : "text-gray-500"
@@ -1125,7 +1367,21 @@ function AdminDashboard() {
           Menu
         </button>
         <button
-          className={`py-2 px-4 font-medium ${
+          className={`py-2 px-4 font-medium whitespace-nowrap ${
+            activeTab === "order-food"
+              ? "border-b-2 border-blue-500 text-blue-500"
+              : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("order-food")}
+        >
+          Order Food {adminCartCount > 0 && (
+            <span className="ml-1 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+              {adminCartCount}
+            </span>
+          )}
+        </button>
+        <button
+          className={`py-2 px-4 font-medium whitespace-nowrap ${
             activeTab === "analytics"
               ? "border-b-2 border-blue-500 text-blue-500"
               : "text-gray-500"
@@ -1143,6 +1399,8 @@ function AdminDashboard() {
         ? renderOrdersManagement()
         : activeTab === "menu"
         ? renderMenuManagement()
+        : activeTab === "order-food"
+        ? renderOrderFood()
         : renderAnalytics()}
 
       {/* Menu Item Modal */}
@@ -1261,6 +1519,106 @@ function AdminDashboard() {
         onClose={() => setShowOrderDetailsModal(false)}
         order={selectedOrder}
       />
+    </div>
+  );
+}
+
+// AdminMenuItem component for ordering interface
+function AdminMenuItem({ item, onAddToCart }) {
+  const [quantity, setQuantity] = useState(1);
+  const [isAdded, setIsAdded] = useState(false);
+
+  return (
+    <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02]">
+      <div className="relative">
+        <img
+          src={item.image_url}
+          alt={item.name}
+          className="w-full h-32 sm:h-48 lg:h-52 object-cover"
+          onError={(e) => {
+            e.target.src =
+              "https://via.placeholder.com/400x300/374151/9CA3AF?text=Food+Image";
+          }}
+        />
+        {item.rating && (
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-black bg-opacity-70 px-2 py-1 rounded-full">
+            <div className="flex items-center space-x-1 text-yellow-400 text-xs sm:text-sm">
+              <Star className="w-3 h-3 fill-current" />
+              <span>{item.rating}</span>
+            </div>
+          </div>
+        )}
+        {item.isSpecial && (
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-orange-500 px-2 py-1 rounded-full">
+            <span className="text-white text-xs font-medium">SPECIAL</span>
+          </div>
+        )}
+      </div>
+
+      <div className="p-2 sm:p-4 lg:p-5">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-white line-clamp-1 flex-1">
+            {item.name}
+          </h3>
+          <span className="text-orange-500 font-bold text-sm sm:text-lg ml-1">
+            ₹{item.price}
+          </span>
+        </div>
+
+        <p className="text-gray-400 text-xs sm:text-sm mb-3 line-clamp-2">
+          {item.description}
+        </p>
+
+        {item.prepTime && (
+          <div className="flex items-center text-gray-500 text-xs mb-2 sm:mb-4">
+            <Clock className="w-3 h-3 mr-1" />
+            <span>{item.prepTime}</span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between gap-1 sm:gap-3">
+          {/* Quantity Selector */}
+          <div className="flex items-center bg-gray-700 rounded-lg">
+            <button
+              className="p-1 sm:p-2 hover:bg-gray-600 rounded-l-lg transition-colors"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            >
+              <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
+            </button>
+            <span className="px-1.5 sm:px-3 py-1 sm:py-2 font-medium min-w-[1.2rem] sm:min-w-[2rem] text-center text-xs sm:text-sm">
+              {quantity}
+            </span>
+            <button
+              className="p-1 sm:p-2 hover:bg-gray-600 rounded-r-lg transition-colors"
+              onClick={() => setQuantity(quantity + 1)}
+            >
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+            </button>
+          </div>
+
+          {/* Add to Cart Button */}
+          <button
+            className={`flex-1 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-lg font-medium transition-colors flex items-center justify-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${
+              isAdded
+                ? "bg-green-500 hover:bg-green-600 text-white"
+                : "bg-orange-500 hover:bg-orange-600 text-white"
+            }`}
+            onClick={() => {
+              onAddToCart(item, quantity);
+              setIsAdded(true);
+              setTimeout(() => setIsAdded(false), 2000);
+            }}
+          >
+            <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">
+              {isAdded ? "Added" : "Add to Cart"}
+            </span>
+            <span className="sm:hidden">
+              {isAdded ? "✓" : "Add"}
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
