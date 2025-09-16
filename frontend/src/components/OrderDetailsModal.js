@@ -1,9 +1,71 @@
-import React from "react";
-import { X, Printer, Package, Calendar, MapPin } from "lucide-react";
+import React, { useState } from "react";
+import { X, Printer, Package, Calendar, MapPin, Settings, Download } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
+import thermalPrinter from '../services/thermalPrinter';
+import PrinterSettings from './PrinterSettings';
+import ThermalPrintHelper from '../utils/thermalPrintHelper';
 
 function OrderDetailsModal({ isOpen, onClose, order }) {
+  const [showPrinterSettings, setShowPrinterSettings] = useState(false);
+  const [printingThermal, setPrintingThermal] = useState(false);
+  const [printError, setPrintError] = useState('');
+
   if (!isOpen || !order) return null;
+
+  // Handle thermal printing
+  const handleThermalPrint = async () => {
+    setPrintingThermal(true);
+    setPrintError('');
+
+    try {
+      // Prepare order data for thermal printing
+      const thermalOrderData = {
+        token: order.token,
+        created_at: order.created_at,
+        user_name: order.user_name,
+        address: order.address,
+        total_price: order.total_price,
+        items: order.order_items.map(item => ({
+          menu_item: item.menu_item,
+          quantity: item.quantity,
+          price_at_time: item.price_at_time
+        }))
+      };
+
+      if (thermalPrinter.isConnected) {
+        // Use direct thermal printer connection
+        await thermalPrinter.printReceipt(thermalOrderData);
+        console.log('Thermal receipt printed successfully');
+      } else {
+        // Fallback to thermal-optimized browser printing
+        await ThermalPrintHelper.printThermalReceipt(thermalOrderData);
+        console.log('Thermal-optimized receipt printed via browser');
+      }
+    } catch (error) {
+      console.error('Thermal printing failed:', error);
+      setPrintError(error.message);
+    } finally {
+      setPrintingThermal(false);
+    }
+  };
+
+  // Handle downloading ESC/POS commands
+  const handleDownloadESCPOS = () => {
+    const thermalOrderData = {
+      token: order.token,
+      created_at: order.created_at,
+      user_name: order.user_name,
+      address: order.address,
+      total_price: order.total_price,
+      items: order.order_items.map(item => ({
+        menu_item: item.menu_item,
+        quantity: item.quantity,
+        price_at_time: item.price_at_time
+      }))
+    };
+
+    ThermalPrintHelper.downloadESCPOSFile(thermalOrderData);
+  };
 
   const handlePrint = () => {
     const printWindow = window.open("", "_blank");
@@ -393,13 +455,62 @@ function OrderDetailsModal({ isOpen, onClose, order }) {
                 <p className="text-3xl font-bold text-orange-500 mb-3">
                   ₹{order.total_price}
                 </p>
-                <button
-                  onClick={handlePrint}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
-                >
-                  <Printer className="w-5 h-5" />
-                  <span>Print Receipt</span>
-                </button>
+
+                {/* Print Error Message */}
+                {printError && (
+                  <div className="bg-red-900 bg-opacity-30 border border-red-500 rounded-lg p-2 mb-3">
+                    <p className="text-red-400 text-xs">{printError}</p>
+                  </div>
+                )}
+
+                {/* Print Buttons */}
+                <div className="space-y-2">
+                  {/* Thermal Print Button */}
+                  <button
+                    onClick={handleThermalPrint}
+                    disabled={printingThermal}
+                    className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                  >
+                    {printingThermal ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        <span>Printing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Printer className="w-5 h-5" />
+                        <span>Thermal Print</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Regular Print Button */}
+                  <button
+                    onClick={handlePrint}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Printer className="w-5 h-5" />
+                    <span>Regular Print</span>
+                  </button>
+
+                  {/* Download ESC/POS Button */}
+                  <button
+                    onClick={handleDownloadESCPOS}
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Download className="w-5 h-5" />
+                    <span>Download ESC/POS</span>
+                  </button>
+
+                  {/* Printer Settings Button */}
+                  <button
+                    onClick={() => setShowPrinterSettings(true)}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Settings className="w-5 h-5" />
+                    <span>Printer Settings</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -465,6 +576,12 @@ function OrderDetailsModal({ isOpen, onClose, order }) {
           </div>
         </div>
       </div>
+
+      {/* Printer Settings Modal */}
+      <PrinterSettings
+        isOpen={showPrinterSettings}
+        onClose={() => setShowPrinterSettings(false)}
+      />
     </div>
   );
 }
